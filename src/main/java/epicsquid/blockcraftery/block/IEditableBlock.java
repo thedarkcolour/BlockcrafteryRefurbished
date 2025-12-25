@@ -4,5 +4,5 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
 
 public interface IEditableBlock {
-  public IUnlistedProperty<IBlockState> getStateProperty();
+	IUnlistedProperty<IBlockState> getStateProperty();
 }
