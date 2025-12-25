@@ -1,0 +1,154 @@
+package epicsquid.blockcraftery.block;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
+import epicsquid.blockcraftery.model.BakedModelEditableCube;
+import epicsquid.blockcraftery.model.BakedModelEditableSlab;
+import epicsquid.blockcraftery.tile.TileEditableBlock;
+import epicsquid.mysticallib.block.BlockTESlabBase;
+import epicsquid.mysticallib.model.block.BakedModelBlock;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
+import net.minecraft.block.SoundType;
+import net.minecraft.block.material.Material;
+import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.state.BlockStateContainer;
+import net.minecraft.block.state.IBlockState;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.BlockRenderLayer;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.common.property.ExtendedBlockState;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.IUnlistedProperty;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
+
+import static epicsquid.blockcraftery.block.BlockEditableCube.LIGHT;
+
+public class BlockEditableSlab extends BlockTESlabBase implements IEditableBlock {
+
+  public BlockEditableSlab(@Nonnull Material mat, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull IBlockState parent, boolean isDouble,
+      @Nullable Block slab, @Nonnull Class<? extends TileEntity> teClass) {
+    super(mat, type, hardness, name, parent, isDouble, slab, teClass);
+    setModelCustom(true);
+    setLightOpacity(0);
+    setOpacity(false);
+    setDefaultState(blockState.getBaseState().withProperty(LIGHT, false));
+  }
+
+  @Override
+  public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+    if (getParent() != null) {
+      return super.getLightOpacity(state, world, pos);
+    }
+    return super.getLightOpacity(state, world, pos);
+  }
+  @Override
+  @Nonnull
+  public IBlockState getStateFromMeta(int meta) {
+    IBlockState iblockstate = this.getDefaultState();
+    if (!this.isDouble()) {
+      iblockstate = iblockstate.withProperty(HALF, meta >> 1 == 1 ? EnumBlockHalf.BOTTOM : EnumBlockHalf.TOP);
+    }
+    return iblockstate.withProperty(LIGHT, meta == 1);
+  }
+
+  @Override
+  public int getMetaFromState(@Nonnull IBlockState state) {
+    return (state.getValue(LIGHT) ? 1 : 0) | (state.getValue(HALF) == EnumBlockHalf.BOTTOM ? 2 : 0);
+  }
+
+  @Override
+  public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos) {
+    return state.getValue(LIGHT) ? 15 : 0;
+  }
+
+  @SideOnly(Side.CLIENT)
+  @Override
+  public boolean canRenderInLayer(@Nonnull IBlockState state, @Nonnull BlockRenderLayer layer) {
+    return true;
+  }
+
+  @Override
+  @Nonnull
+  protected BlockStateContainer createBlockState() {
+    IProperty[] listedProperties = new IProperty[] { BlockSlab.HALF, LIGHT };
+    IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[] { STATEPROP };
+    return new ExtendedBlockState(this, listedProperties, unlistedProperties);
+  }
+
+  @Override
+  @Nonnull
+  public IBlockState getExtendedState(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
+    TileEntity t = world.getTileEntity(pos);
+    IBlockState actual = getActualState(state, world, pos);
+    if (t instanceof TileEditableBlock && actual instanceof IExtendedBlockState) {
+      return ((IExtendedBlockState) actual).withProperty(STATEPROP, ((TileEditableBlock) t).state);
+    }
+    return state;
+  }
+
+  private static final UnlistedPropertyState STATEPROP = new UnlistedPropertyState();
+
+  public static class UnlistedPropertyState implements IUnlistedProperty<IBlockState> {
+
+    @Override
+    @Nonnull
+    public String getName() {
+      return "stateprop";
+    }
+
+    @Override
+    public boolean isValid(IBlockState value) {
+      return true;
+    }
+
+    @Override
+    @Nonnull
+    public Class<IBlockState> getType() {
+      return IBlockState.class;
+    }
+
+    @Override
+    @Nonnull
+    public String valueToString(IBlockState value) {
+      return value.toString();
+    }
+
+  }
+
+  @Override
+  public boolean doesSideBlockRendering(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
+    TileEntity t = world.getTileEntity(pos);
+    if (t instanceof TileEditableBlock) {
+      return ((TileEditableBlock) t).state.getBlock().doesSideBlockRendering(((TileEditableBlock) t).state, world, pos, side) && super
+          .doesSideBlockRendering(state, world, pos, side);
+    }
+    return false;
+  }
+
+  @Override
+  public boolean isSideSolid(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
+    return false;
+  }
+
+  @Override
+  @Nonnull
+  protected Class<? extends BakedModelBlock> getModelClass(int type) {
+    if (type == 1) {
+      return BakedModelEditableCube.class;
+    } else {
+      return BakedModelEditableSlab.class;
+    }
+  }
+
+  @Override
+  @Nonnull
+  public IUnlistedProperty<IBlockState> getStateProperty() {
+    return STATEPROP;
+  }
+
+}
