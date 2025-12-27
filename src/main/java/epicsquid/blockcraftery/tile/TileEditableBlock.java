@@ -116,13 +116,18 @@ public class TileEditableBlock extends TileBase {
 	@Override
 	public void readFromNBT(NBTTagCompound tag) {
 		super.readFromNBT(tag);
-		this.state = NBTUtil.readBlockState(tag.getCompoundTag("state"));
+		IBlockState camo = NBTUtil.readBlockState(tag.getCompoundTag("state"));
+		this.state = camo;
 		this.stack = new ItemStack(tag.getCompoundTag("stack"));
 		// gs is slang for glowstone
 		this.hasGlowstone = tag.getBoolean("gs");
 
 		if (this.world != null && this.pos != null) {
-			this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).withProperty(IEditableBlock.LIGHT, this.hasGlowstone), 2);
+			IBlockState newState = this.world.getBlockState(this.pos).withProperty(IEditableBlock.LIGHT, this.hasGlowstone);
+			if (newState.getBlock() instanceof IEditableBlock editable) {
+				newState = editable.setEditableProperties(newState, camo);
+			}
+			this.world.setBlockState(this.pos, newState, 2);
 		}
 	}
 

@@ -16,30 +16,27 @@ import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockAccess;
+import net.minecraft.world.World;
 import net.minecraftforge.common.property.ExtendedBlockState;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.common.property.IUnlistedProperty;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import org.jspecify.annotations.Nullable;
 
 import javax.annotation.Nonnull;
 
 public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
-
 	public static final PropertyBool FULLCUBE = PropertyBool.create("fullcube");
 	public static final PropertyBool OPAQUECUBE = PropertyBool.create("opaquecube");
 
 	public BlockEditableCube(@Nonnull Material mat, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull Class<? extends TileEntity> teClass) {
 		super(mat, type, hardness, name, teClass);
 		setModelCustom(true);
-		setLightOpacity(0);
-		setOpacity(false);
 		setDefaultState(this.blockState.getBaseState().withProperty(FULLCUBE, true).withProperty(OPAQUECUBE, false).withProperty(LIGHT, false));
 	}
 
-	@SideOnly(Side.CLIENT)
 	@Override
 	public boolean canRenderInLayer(@Nonnull IBlockState state, @Nonnull BlockRenderLayer layer) {
 		return true;
@@ -52,7 +49,17 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 
 	@Override
 	public boolean isFullCube(@Nonnull IBlockState state) {
-		return !state.getValue(FULLCUBE);
+		return state.getValue(FULLCUBE);
+	}
+
+	@Override
+	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
+		if (world.getTileEntity(pos) instanceof TileEditableBlock editable) {
+			if (editable.state != null) {
+				return editable.state.getLightOpacity();
+			}
+		}
+		return super.getLightOpacity(state, world, pos);
 	}
 
 	@Override
@@ -103,14 +110,24 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 	}
 
 	@Override
+	public IBlockState getStateForPlacement(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer) {
+		return getDefaultState();
+	}
+
+	@Override
 	@Nonnull
 	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState().withProperty(LIGHT, meta << 2 == 1).withProperty(OPAQUECUBE, meta << 1 == 1).withProperty(LIGHT, meta == 1);
+		return getDefaultState()
+			.withProperty(LIGHT, (meta >> 2 & 1) == 1)
+			.withProperty(OPAQUECUBE, (meta >> 1 & 1) == 1)
+			.withProperty(FULLCUBE, (meta & 1) == 1);
 	}
 
 	@Override
 	public int getMetaFromState(@Nonnull IBlockState state) {
-		return (state.getValue(LIGHT) ? 1 : 0) >> 2 + (state.getValue(OPAQUECUBE) ? 1 : 0) >> 1 + (state.getValue(FULLCUBE) ? 1 : 0);
+		return (state.getValue(LIGHT) ? 1 : 0) << 2
+			| (state.getValue(OPAQUECUBE) ? 1 : 0) << 1
+			| (state.getValue(FULLCUBE) ? 1 : 0);
 	}
 
 	@Override
@@ -122,6 +139,15 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 			return extended.withProperty(EditableStateProperty.INSTANCE, placeState);
 		}
 		return state;
+	}
+
+	@Override
+	public IBlockState setEditableProperties(IBlockState state, IBlockState camo) {
+		if (camo == Blocks.AIR.getDefaultState()) {
+			return state.withProperty(FULLCUBE, true).withProperty(OPAQUECUBE, false);
+		} else {
+			return state.withProperty(FULLCUBE, camo.isFullCube()).withProperty(OPAQUECUBE, camo.isOpaqueCube());
+		}
 	}
 
 	@Nonnull
