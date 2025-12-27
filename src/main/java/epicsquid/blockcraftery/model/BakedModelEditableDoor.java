@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableDoor extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
-
 	private final Cube cube_east;
 
 	public BakedModelEditableDoor(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,

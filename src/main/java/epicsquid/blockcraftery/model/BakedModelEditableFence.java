@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableFence extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Cube baked_post_right, baked_post_left, baked_west, baked_west_top;
 
 	public BakedModelEditableFence(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,

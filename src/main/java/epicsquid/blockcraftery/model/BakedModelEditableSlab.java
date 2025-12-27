@@ -28,7 +28,6 @@ import java.util.function.Function;
 
 public class BakedModelEditableSlab extends BakedModelEditable {
 	Cube cube;
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 
 	public BakedModelEditableSlab(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
 								  CustomModelBase model) {

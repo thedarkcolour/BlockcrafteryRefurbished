@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableTrapDoor extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 
 	private final Cube cube_down;
 

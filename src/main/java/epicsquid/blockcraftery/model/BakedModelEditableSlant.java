@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableSlant extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Segment baked_segm_down_south;
 
 	public BakedModelEditableSlant(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,

@@ -25,8 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditablePressurePlate extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
-
 	private final Cube cube_off;
 
 	public BakedModelEditablePressurePlate(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,

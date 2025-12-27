@@ -29,7 +29,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableStairs extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Cube baked_cube_down;
 	Cube baked_q_up_pz;
 

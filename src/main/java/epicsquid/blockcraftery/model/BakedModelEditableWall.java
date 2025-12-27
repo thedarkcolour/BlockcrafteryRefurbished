@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableWall extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Cube baked_post, baked_west, baked_east;
 
 	public static Vec4f FULL_FACE_UV = new Vec4f(0, 0, 16, 16);

@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableOuterCorner extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Segment baked_segm_down_pxpz;
 
 	public BakedModelEditableOuterCorner(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,

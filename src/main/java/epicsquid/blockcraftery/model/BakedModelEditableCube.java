@@ -24,7 +24,6 @@ import java.util.Map;
 import java.util.function.Function;
 
 public class BakedModelEditableCube extends BakedModelEditable {
-	public static Map<String, List<BakedQuad>> data = new HashMap<>();
 	Cube cube;
 
 	public BakedModelEditableCube(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter,
@@ -78,5 +77,4 @@ public class BakedModelEditableCube extends BakedModelEditable {
 	public void addItemModel(List<BakedQuad> quads, EnumFacing side) {
 		this.cube.addToList(quads, side);
 	}
-
 }
