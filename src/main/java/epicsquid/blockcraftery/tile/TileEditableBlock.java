@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 public class TileEditableBlock extends TileBase {
 	public IBlockState state = Blocks.AIR.getDefaultState();
 	public ItemStack stack = ItemStack.EMPTY;
-	private boolean hasGlowstone = false;
+	public boolean hasGlowstone = false;
 
 	@Override
 	public boolean activate(@Nonnull World world, @Nonnull BlockPos pos, @Nonnull IBlockState state, @Nonnull EntityPlayer player, @Nonnull EnumHand hand, @Nonnull EnumFacing side, float hitX, float hitY, float hitZ) {
@@ -118,6 +118,12 @@ public class TileEditableBlock extends TileBase {
 		super.readFromNBT(tag);
 		this.state = NBTUtil.readBlockState(tag.getCompoundTag("state"));
 		this.stack = new ItemStack(tag.getCompoundTag("stack"));
+		// gs is slang for glowstone
+		this.hasGlowstone = tag.getBoolean("gs");
+
+		if (this.world != null && this.pos != null) {
+			this.world.setBlockState(this.pos, this.world.getBlockState(this.pos).withProperty(IEditableBlock.LIGHT, this.hasGlowstone), 2);
+		}
 	}
 
 	@Override
@@ -126,6 +132,7 @@ public class TileEditableBlock extends TileBase {
 		NBTTagCompound tag = super.writeToNBT(nbt);
 		tag.setTag("state", NBTUtil.writeBlockState(new NBTTagCompound(), this.state));
 		tag.setTag("stack", this.stack.writeToNBT(new NBTTagCompound()));
+		tag.setBoolean("gs", this.hasGlowstone);
 		return tag;
 	}
 }
