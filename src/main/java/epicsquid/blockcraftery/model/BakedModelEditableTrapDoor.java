@@ -38,12 +38,12 @@ public class BakedModelEditableTrapDoor extends BakedModelEditable {
 	@Override
 	public void addGeometry(List<BakedQuad> quads, EnumFacing side, IBlockState state, TextureAtlasSprite[] texes, int tintIndex) {
 		Cube cube_down, cube_up, cube_east, cube_west, cube_south, cube_north;
-		cube_down = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 0.1875, 1, null, texes, 0).setNoCull(EnumFacing.DOWN);
-		cube_up = ModelUtil.makeCube(this.format, 0, 0.8125, 0, 1, 0.1875, 1, null, texes, 0).setNoCull(EnumFacing.UP);
-		cube_west = ModelUtil.makeCube(this.format, 0.8125, 0, 0, 0.1875, 1, 1, null, texes, 0).setNoCull(EnumFacing.WEST);
-		cube_east = ModelUtil.makeCube(this.format, 0, 0, 0, 0.1875, 1, 1, null, texes, 0).setNoCull(EnumFacing.EAST);
-		cube_north = ModelUtil.makeCube(this.format, 0, 0, 0.8125, 1, 1, 0.1875, null, texes, 0).setNoCull(EnumFacing.NORTH);
-		cube_south = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 1, 0.1875, null, texes, 0).setNoCull(EnumFacing.SOUTH);
+		cube_down = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 0.1875, 1, null, texes, tintIndex).setNoCull(EnumFacing.DOWN);
+		cube_up = ModelUtil.makeCube(this.format, 0, 0.8125, 0, 1, 0.1875, 1, null, texes, tintIndex).setNoCull(EnumFacing.UP);
+		cube_west = ModelUtil.makeCube(this.format, 0.8125, 0, 0, 0.1875, 1, 1, null, texes, tintIndex).setNoCull(EnumFacing.WEST);
+		cube_east = ModelUtil.makeCube(this.format, 0, 0, 0, 0.1875, 1, 1, null, texes, tintIndex).setNoCull(EnumFacing.EAST);
+		cube_north = ModelUtil.makeCube(this.format, 0, 0, 0.8125, 1, 1, 0.1875, null, texes, tintIndex).setNoCull(EnumFacing.NORTH);
+		cube_south = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 1, 0.1875, null, texes, tintIndex).setNoCull(EnumFacing.SOUTH);
 		BlockTrapDoor.DoorHalf half = state.getValue(BlockTrapDoor.HALF);
 		boolean open = state.getValue(BlockTrapDoor.OPEN);
 		if (!open) {

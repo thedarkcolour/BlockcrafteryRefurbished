@@ -37,10 +37,10 @@ public class BakedModelEditableDoor extends BakedModelEditable {
 	@Override
 	public void addGeometry(List<BakedQuad> quads, EnumFacing side, IBlockState state, TextureAtlasSprite[] texes, int tintIndex) {
 		Cube cube_east, cube_west, cube_south, cube_north;
-		cube_west = ModelUtil.makeCube(this.format, 0.8125, 0, 0, 0.1875, 1, 1, null, texes, 0).setNoCull(EnumFacing.WEST);
-		cube_east = ModelUtil.makeCube(this.format, 0, 0, 0, 0.1875, 1, 1, null, texes, 0).setNoCull(EnumFacing.EAST);
-		cube_north = ModelUtil.makeCube(this.format, 0, 0, 0.8125, 1, 1, 0.1875, null, texes, 0).setNoCull(EnumFacing.NORTH);
-		cube_south = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 1, 0.1875, null, texes, 0).setNoCull(EnumFacing.SOUTH);
+		cube_west = ModelUtil.makeCube(this.format, 0.8125, 0, 0, 0.1875, 1, 1, null, texes, tintIndex).setNoCull(EnumFacing.WEST);
+		cube_east = ModelUtil.makeCube(this.format, 0, 0, 0, 0.1875, 1, 1, null, texes, tintIndex).setNoCull(EnumFacing.EAST);
+		cube_north = ModelUtil.makeCube(this.format, 0, 0, 0.8125, 1, 1, 0.1875, null, texes, tintIndex).setNoCull(EnumFacing.NORTH);
+		cube_south = ModelUtil.makeCube(this.format, 0, 0, 0, 1, 1, 0.1875, null, texes, tintIndex).setNoCull(EnumFacing.SOUTH);
 
 		BlockDoor.EnumHingePosition hinge = state.getValue(BlockDoor.HINGE);
 		boolean open = state.getValue(BlockDoor.OPEN);

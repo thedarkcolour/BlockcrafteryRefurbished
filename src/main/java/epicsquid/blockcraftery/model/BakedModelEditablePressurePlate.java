@@ -37,8 +37,8 @@ public class BakedModelEditablePressurePlate extends BakedModelEditable {
 	@Override
 	public void addGeometry(List<BakedQuad> quads, EnumFacing side, IBlockState state, TextureAtlasSprite[] texes, int tintIndex) {
 		Cube cube_on, cube_off;
-		cube_on = ModelUtil.makeCube(this.format, 0.0625, 0, 0.0625, 0.875, 0.03125, 0.875, null, texes, 0).setNoCull(EnumFacing.DOWN);
-		cube_off = ModelUtil.makeCube(this.format, 0.0625, 0, 0.0625, 0.875, 0.0625, 0.875, null, texes, 0).setNoCull(EnumFacing.DOWN);
+		cube_on = ModelUtil.makeCube(this.format, 0.0625, 0, 0.0625, 0.875, 0.03125, 0.875, null, texes, tintIndex).setNoCull(EnumFacing.DOWN);
+		cube_off = ModelUtil.makeCube(this.format, 0.0625, 0, 0.0625, 0.875, 0.0625, 0.875, null, texes, tintIndex).setNoCull(EnumFacing.DOWN);
 
 		boolean on = state.getValue(BlockPressurePlate.POWERED);
 		if (on) {
