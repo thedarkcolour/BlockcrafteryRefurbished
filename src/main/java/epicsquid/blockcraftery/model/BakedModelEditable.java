@@ -26,10 +26,11 @@ import org.apache.commons.lang3.tuple.Pair;
 
 import javax.vecmath.Matrix4f;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Function;
 
 public abstract class BakedModelEditable extends BakedModelBlock {
-	public Map<String, List<BakedQuad>> data = new HashMap<>();
+	public Map<String, List<BakedQuad>> data = new ConcurrentHashMap<>();
 	Cube cube;
 
 	public BakedModelEditable(IModelState state, VertexFormat format, Function<ResourceLocation, TextureAtlasSprite> bakedTextureGetter, CustomModelBase model) {
@@ -40,53 +41,52 @@ public abstract class BakedModelEditable extends BakedModelBlock {
 
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		List<BakedQuad> finalquads = new ArrayList<>();
-		if (state instanceof IExtendedBlockState extended && state.getBlock() instanceof IEditableBlock) {
-			IBlockState texState = extended.getValue(EditableStateProperty.INSTANCE);
-			String dataId = (texState == null ? "null" : texState.toString()) + "_" + state + "_" + (side == null ? "null" : side.toString()) + (
-				MinecraftForgeClient.getRenderLayer() == null ?
-					"null" :
-					MinecraftForgeClient.getRenderLayer().toString());
-			if (!this.data.containsKey(dataId)) {
-				List<BakedQuad> quads = new ArrayList<>();
-				TextureAtlasSprite[] sprites = new TextureAtlasSprite[]{getParticleTexture()};
-				int[] tintIndices = new int[]{0};
-				boolean usingDefault = true;
-				if (texState != null && texState.getBlock() != Blocks.AIR) {
-					IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(texState);
-					sprites[0] = model.getParticleTexture();
-					List<BakedQuad> texQuads = model.getQuads(texState, side, rand);
-					if (!texQuads.isEmpty()) {
-						sprites = new TextureAtlasSprite[texQuads.size()];
-						tintIndices = new int[texQuads.size()];
-						for (int i = 0; i < texQuads.size(); i++) {
-							if (texQuads.get(i).hasTintIndex()) {
-								tintIndices[i] = texQuads.get(i).getTintIndex();
-							} else {
-								tintIndices[i] = -1;
-							}
-							sprites[i] = texQuads.get(i).getSprite();
-						}
+		if (state == null) {
+			List<BakedQuad> quads = new ArrayList<>();
+			addItemModel(quads, side);
+			return quads;
+		}
+
+		if (!(state instanceof IExtendedBlockState extended) || !(state.getBlock() instanceof IEditableBlock)) {
+			return List.of();
+		}
+		IBlockState texState = extended.getValue(EditableStateProperty.INSTANCE);
+		String dataId = texState + "_" + state + "_" + (side == null ? "null" : side.toString()) + MinecraftForgeClient.getRenderLayer();
+		return this.data.computeIfAbsent(dataId, (key) -> cacheQuads(state, texState, side, rand));
+	}
+
+	private List<BakedQuad> cacheQuads(IBlockState state, IBlockState texState, EnumFacing side, long seed) {
+		List<BakedQuad> quads = new ArrayList<>();
+
+		TextureAtlasSprite[] sprites = new TextureAtlasSprite[]{getParticleTexture()};
+		int[] tintIndices = new int[]{0};
+		boolean usingDefault = true;
+		if (texState != null && texState.getBlock() != Blocks.AIR) {
+			IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(texState);
+			sprites[0] = model.getParticleTexture();
+			List<BakedQuad> texQuads = model.getQuads(texState, side, seed);
+			if (!texQuads.isEmpty()) {
+				sprites = new TextureAtlasSprite[texQuads.size()];
+				tintIndices = new int[texQuads.size()];
+				for (int i = 0; i < texQuads.size(); i++) {
+					if (texQuads.get(i).hasTintIndex()) {
+						tintIndices[i] = texQuads.get(i).getTintIndex();
+					} else {
+						tintIndices[i] = -1;
 					}
-					usingDefault = false;
+					sprites[i] = texQuads.get(i).getSprite();
 				}
-				if (usingDefault && MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.CUTOUT_MIPPED
-					|| !usingDefault && MinecraftForgeClient.getRenderLayer() == texState.getBlock().getRenderLayer()) {
-					for (int i = 0; i < sprites.length; i++) {
-						addGeometry(quads, side, state, new TextureAtlasSprite[]{sprites[i], sprites[i], sprites[i], sprites[i], sprites[i], sprites[i]},
-							tintIndices[i]);
-					}
-				}
-				this.data.put(dataId, quads);
-				finalquads.addAll(quads);
-			} else if (!dataId.equals("null")) {
-				finalquads.addAll(this.data.get(dataId));
+			}
+			usingDefault = false;
+		}
+		if (usingDefault && MinecraftForgeClient.getRenderLayer() == BlockRenderLayer.CUTOUT_MIPPED
+			|| !usingDefault && MinecraftForgeClient.getRenderLayer() == texState.getBlock().getRenderLayer()) {
+			for (int i = 0; i < sprites.length; i++) {
+				addGeometry(quads, side, state, new TextureAtlasSprite[]{sprites[i], sprites[i], sprites[i], sprites[i], sprites[i], sprites[i]}, tintIndices[i]);
 			}
 		}
-		if (state == null) {
-			addItemModel(finalquads, side);
-		}
-		return finalquads;
+
+		return quads;
 	}
 
 	public abstract void addItemModel(List<BakedQuad> quads, EnumFacing side);
