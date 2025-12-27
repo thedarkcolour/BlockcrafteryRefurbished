@@ -22,8 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-import static epicsquid.blockcraftery.block.BlockEditableCube.LIGHT;
-
 public class BlockEditableSlant extends BlockTESlantBase implements IEditableBlock {
 
 	public BlockEditableSlant(@Nonnull IBlockState state, @Nonnull SoundType type, float hardness, @Nonnull String name,

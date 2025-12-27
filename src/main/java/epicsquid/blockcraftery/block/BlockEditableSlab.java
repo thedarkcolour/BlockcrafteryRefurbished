@@ -26,8 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-import static epicsquid.blockcraftery.block.BlockEditableCube.LIGHT;
-
 public class BlockEditableSlab extends BlockTESlabBase implements IEditableBlock {
 
 	public BlockEditableSlab(@Nonnull Material mat, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull IBlockState parent, boolean isDouble,

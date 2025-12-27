@@ -30,7 +30,6 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 
 	public static final PropertyBool FULLCUBE = PropertyBool.create("fullcube");
 	public static final PropertyBool OPAQUECUBE = PropertyBool.create("opaquecube");
-	public static final PropertyBool LIGHT = PropertyBool.create("light");
 
 	public BlockEditableCube(@Nonnull Material mat, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull Class<? extends TileEntity> teClass) {
 		super(mat, type, hardness, name, teClass);

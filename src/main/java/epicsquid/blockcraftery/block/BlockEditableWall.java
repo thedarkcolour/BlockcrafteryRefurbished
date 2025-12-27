@@ -22,8 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-import static epicsquid.blockcraftery.block.BlockEditableCube.LIGHT;
-
 public class BlockEditableWall extends BlockTEWallBase implements IEditableBlock {
 
 	public BlockEditableWall(@Nonnull Block block, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull Class<? extends TileEntity> teClass) {

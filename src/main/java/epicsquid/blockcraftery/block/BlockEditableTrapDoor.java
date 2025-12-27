@@ -22,8 +22,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 import javax.annotation.Nonnull;
 
-import static epicsquid.blockcraftery.block.BlockEditableCube.LIGHT;
-
 public class BlockEditableTrapDoor extends BlockTETrapDoorBase implements IEditableBlock {
 
 	public BlockEditableTrapDoor(@Nonnull Block block, @Nonnull SoundType type, float hardness, @Nonnull String name,

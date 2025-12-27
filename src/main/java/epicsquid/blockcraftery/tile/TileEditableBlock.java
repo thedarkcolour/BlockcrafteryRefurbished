@@ -33,22 +33,25 @@ public class TileEditableBlock extends TileBase {
 		if (hand == EnumHand.OFF_HAND) {
 			return false;
 		}
-		if ((this.state.getBlock() == Blocks.AIR || ConfigManager.rightClickReplace) && !player.getHeldItemMainhand().isEmpty() && Block.getBlockFromItem(player.getHeldItemMainhand().getItem()) != Blocks.AIR) {
-			Block b = Block.getBlockFromItem(player.getHeldItemMainhand().getItem());
+
+		ItemStack mainHandItem = player.getHeldItemMainhand();
+
+		if ((this.state.getBlock() == Blocks.AIR || ConfigManager.rightClickReplace) && !mainHandItem.isEmpty() && Block.getBlockFromItem(mainHandItem.getItem()) != Blocks.AIR) {
+			Block b = Block.getBlockFromItem(mainHandItem.getItem());
 			if (b != null && !(b instanceof IEditableBlock) && b != Blocks.AIR) {
-				IBlockState newState = b.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, player.getHeldItemMainhand().getMetadata(), player);
+				IBlockState newState = b.getStateForPlacement(world, pos, side, hitX, hitY, hitZ, mainHandItem.getMetadata(), player);
 				if (newState != this.state) {
 					this.state = newState;
 					markDirty();
 					if (!player.capabilities.isCreativeMode && !ConfigManager.freeDecoration) {
-						if (!world.isRemote && !player.capabilities.isCreativeMode && !this.stack.isEmpty()) {
+						if (!world.isRemote && !this.stack.isEmpty()) {
 							BlockPos offset = pos.offset(side);
 							world.spawnEntity(new EntityItem(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, this.stack));
 						}
-						this.stack = player.getHeldItemMainhand().copy();
+						this.stack = mainHandItem.copy();
 						this.stack.setCount(1);
-						player.getHeldItemMainhand().shrink(1);
-						if (player.getHeldItemMainhand().isEmpty()) {
+						mainHandItem.shrink(1);
+						if (mainHandItem.isEmpty()) {
 							player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 						}
 					}
@@ -64,11 +67,11 @@ public class TileEditableBlock extends TileBase {
 					return true;
 				}
 			}
-		} else if (player.getHeldItemMainhand().getItem() == Items.GLOWSTONE_DUST) {
-			world.setBlockState(pos, state.withProperty(BlockEditableCube.LIGHT, true));
+		} else if (mainHandItem.getItem() == Items.GLOWSTONE_DUST && !state.getValue(IEditableBlock.LIGHT)) {
+			world.setBlockState(pos, state.withProperty(IEditableBlock.LIGHT, true));
 			if (!player.capabilities.isCreativeMode) {
-				player.getHeldItemMainhand().shrink(1);
-				if (player.getHeldItemMainhand().isEmpty()) {
+				mainHandItem.shrink(1);
+				if (mainHandItem.isEmpty()) {
 					player.setHeldItem(EnumHand.MAIN_HAND, ItemStack.EMPTY);
 				}
 			}
@@ -76,7 +79,7 @@ public class TileEditableBlock extends TileBase {
 			world.playSound(player, pos, SoundEvents.ENTITY_ITEMFRAME_ADD_ITEM, SoundCategory.BLOCKS, 1f, 1f);
 			markDirty();
 			return true;
-		} else if (player.isSneaking() && player.getHeldItemMainhand().isEmpty()) {
+		} else if (player.isSneaking() && mainHandItem.isEmpty()) {
 			if (!world.isRemote && !player.capabilities.isCreativeMode && !ConfigManager.freeDecoration) {
 				BlockPos offset = pos.offset(side);
 				world.spawnEntity(new EntityItem(world, offset.getX() + 0.5, offset.getY() + 0.5, offset.getZ() + 0.5, this.stack));
