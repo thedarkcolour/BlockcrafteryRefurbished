@@ -21,12 +21,36 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class RegistryManager {
-	public static Block editable_block, editable_stairs, editable_slab, editable_double_slab, editable_slant, editable_outer_corner, editable_inner_corner,
-		editable_wall, editable_fence, editable_block_reinforced, editable_stairs_reinforced, editable_slab_reinforced, editable_double_slab_reinforced,
-		editable_slant_reinforced, editable_outer_corner_reinforced, editable_inner_corner_reinforced, editable_wall_reinforced, editable_fence_reinforced,
-		editable_trap_door, editable_trap_door_reinforced, editable_door, editable_door_reinforced, editable_pressure_plate_all, editable_pressure_plate_mobs,
-		editable_pressure_plate_player, editable_pressure_plate_items, editable_pressure_plate_all_reinforced, editable_pressure_plate_items_reinforced,
-		editable_pressure_plate_mobs_reinforced, editable_pressure_plate_player_reinforced;
+	public static Block editable_block;
+	public static Block editable_block_reinforced;
+	public static Block editable_stairs;
+	public static Block editable_stairs_reinforced;
+	public static Block editable_slab;
+	public static Block editable_slab_reinforced;
+	public static Block editable_double_slab;
+	public static Block editable_double_slab_reinforced;
+	public static Block editable_slant;
+	public static Block editable_slant_reinforced;
+	public static Block editable_outer_corner;
+	public static Block editable_outer_corner_reinforced;
+	public static Block editable_inner_corner;
+	public static Block editable_inner_corner_reinforced;
+	public static Block editable_wall;
+	public static Block editable_wall_reinforced;
+	public static Block editable_fence;
+	public static Block editable_fence_reinforced;
+	public static Block editable_trap_door;
+	public static Block editable_trap_door_reinforced;
+	public static Block editable_door;
+	public static Block editable_door_reinforced;
+	public static Block editable_pressure_plate_all;
+	public static Block editable_pressure_plate_all_reinforced;
+	public static Block editable_pressure_plate_mobs;
+	public static Block editable_pressure_plate_mobs_reinforced;
+	public static Block editable_pressure_plate_player;
+	public static Block editable_pressure_plate_player_reinforced;
+	public static Block editable_pressure_plate_items;
+	public static Block editable_pressure_plate_items_reinforced;
 
 	@SubscribeEvent
 	public void registerContent(RegisterContentEvent event) {
@@ -79,7 +103,40 @@ public class RegistryManager {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void registerColorHandlers(RegisterColorHandlersEvent event) {
-		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new EditableBlockColors(), editable_block, editable_stairs, editable_slab, editable_double_slab, editable_slant, editable_outer_corner, editable_inner_corner, editable_wall, editable_wall, editable_fence);
+		Block[] blocks = {
+			editable_block,
+			editable_block_reinforced,
+			editable_stairs,
+			editable_stairs_reinforced,
+			editable_slab,
+			editable_slab_reinforced,
+			editable_double_slab,
+			editable_double_slab_reinforced,
+			editable_slant,
+			editable_slant_reinforced,
+			editable_outer_corner,
+			editable_outer_corner_reinforced,
+			editable_inner_corner,
+			editable_inner_corner_reinforced,
+			editable_wall,
+			editable_wall_reinforced,
+			editable_fence,
+			editable_fence_reinforced,
+			// todo tints don't work properly with grass on these
+			//editable_trap_door,
+			//editable_trap_door_reinforced,
+			//editable_door,
+			//editable_door_reinforced,
+			//editable_pressure_plate_all,
+			//editable_pressure_plate_all_reinforced,
+			//editable_pressure_plate_mobs,
+			//editable_pressure_plate_mobs_reinforced,
+			//editable_pressure_plate_player,
+			//editable_pressure_plate_player_reinforced,
+			//editable_pressure_plate_items,
+			//editable_pressure_plate_items_reinforced,
+		};
+		Minecraft.getMinecraft().getBlockColors().registerBlockColorHandler(new EditableBlockColors(), blocks);
 	}
 
 	@SubscribeEvent
