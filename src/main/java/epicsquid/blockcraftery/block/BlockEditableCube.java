@@ -116,12 +116,10 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 	@Override
 	@Nonnull
 	public IBlockState getExtendedState(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos) {
-		TileEntity t = world.getTileEntity(pos);
-		IBlockState actual = getActualState(state, world, pos);
-		if (t instanceof TileEditableBlock && actual instanceof IExtendedBlockState) {
-			IBlockState tileState = ((TileEditableBlock) t).state;
-			IBlockState placeState = tileState.getBlock().getActualState(tileState, world, pos);
-			return ((IExtendedBlockState) actual).withProperty(EditableStateProperty.INSTANCE, placeState);
+		if (world.getTileEntity(pos) instanceof TileEditableBlock t && state instanceof IExtendedBlockState extended) {
+			// fix IC2 crash
+			IBlockState placeState = t.state;
+			return extended.withProperty(EditableStateProperty.INSTANCE, placeState);
 		}
 		return state;
 	}
