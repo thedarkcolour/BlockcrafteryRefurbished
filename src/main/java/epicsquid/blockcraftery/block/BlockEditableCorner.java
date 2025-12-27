@@ -70,7 +70,7 @@ public class BlockEditableCorner extends BlockTECornerBase implements IEditableB
 	@Nonnull
 	public BlockStateContainer createBlockState() {
 		IProperty[] listedProperties = new IProperty[]{BlockCornerBase.INNER, BlockCornerBase.UP, BlockCornerBase.DIR, LIGHT};
-		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{STATEPROP};
+		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{EditableStateProperty.INSTANCE};
 		return new ExtendedBlockState(this, listedProperties, unlistedProperties);
 	}
 
@@ -80,37 +80,9 @@ public class BlockEditableCorner extends BlockTECornerBase implements IEditableB
 		TileEntity t = world.getTileEntity(pos);
 		IBlockState actual = getActualState(state, world, pos).withProperty(INNER, this.inner);
 		if (t instanceof TileEditableBlock && actual instanceof IExtendedBlockState) {
-			return ((IExtendedBlockState) actual).withProperty(STATEPROP, ((TileEditableBlock) t).state);
+			return ((IExtendedBlockState) actual).withProperty(EditableStateProperty.INSTANCE, ((TileEditableBlock) t).state);
 		}
 		return state;
-	}
-
-	private static final UnlistedPropertyState STATEPROP = new UnlistedPropertyState();
-
-	public static class UnlistedPropertyState implements IUnlistedProperty<IBlockState> {
-
-		@Override
-		@Nonnull
-		public String getName() {
-			return "stateprop";
-		}
-
-		@Override
-		public boolean isValid(@Nonnull IBlockState value) {
-			return true;
-		}
-
-		@Override
-		@Nonnull
-		public Class<IBlockState> getType() {
-			return IBlockState.class;
-		}
-
-		@Override
-		@Nonnull
-		public String valueToString(@Nonnull IBlockState value) {
-			return value.toString();
-		}
 	}
 
 	@Override
@@ -126,12 +98,6 @@ public class BlockEditableCorner extends BlockTECornerBase implements IEditableB
 	@Override
 	public boolean isSideSolid(@Nonnull IBlockState state, @Nonnull IBlockAccess world, @Nonnull BlockPos pos, @Nonnull EnumFacing side) {
 		return false;
-	}
-
-	@Override
-	@Nonnull
-	public IUnlistedProperty<IBlockState> getStateProperty() {
-		return STATEPROP;
 	}
 
 	@Nonnull

@@ -99,7 +99,7 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 	@Nonnull
 	protected BlockStateContainer createBlockState() {
 		IProperty[] listedProperties = new IProperty[]{FULLCUBE, OPAQUECUBE, LIGHT};
-		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{STATEPROP};
+		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{EditableStateProperty.INSTANCE};
 		return new ExtendedBlockState(this, listedProperties, unlistedProperties);
 	}
 
@@ -122,7 +122,7 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 		if (t instanceof TileEditableBlock && actual instanceof IExtendedBlockState) {
 			IBlockState tileState = ((TileEditableBlock) t).state;
 			IBlockState placeState = tileState.getBlock().getActualState(tileState, world, pos);
-			return ((IExtendedBlockState) actual).withProperty(STATEPROP, placeState);
+			return ((IExtendedBlockState) actual).withProperty(EditableStateProperty.INSTANCE, placeState);
 		}
 		return state;
 	}
@@ -133,40 +133,6 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 			return super.getLightOpacity(getParentState(), world, pos);
 		}
 		return super.getLightOpacity(state, world, pos);
-	}
-
-	public static final UnlistedPropertyState STATEPROP = new UnlistedPropertyState();
-
-	public static class UnlistedPropertyState implements IUnlistedProperty<IBlockState> {
-
-		@Override
-		@Nonnull
-		public String getName() {
-			return "stateprop";
-		}
-
-		@Override
-		public boolean isValid(@Nonnull IBlockState value) {
-			return true;
-		}
-
-		@Override
-		@Nonnull
-		public Class<IBlockState> getType() {
-			return IBlockState.class;
-		}
-
-		@Override
-		@Nonnull
-		public String valueToString(@Nonnull IBlockState value) {
-			return value.toString();
-		}
-	}
-
-	@Override
-	@Nonnull
-	public IUnlistedProperty<IBlockState> getStateProperty() {
-		return STATEPROP;
 	}
 
 	@Nonnull

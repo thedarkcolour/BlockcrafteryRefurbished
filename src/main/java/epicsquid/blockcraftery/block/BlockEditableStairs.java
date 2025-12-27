@@ -69,7 +69,7 @@ public class BlockEditableStairs extends BlockTEStairsBase implements IEditableB
 	@Nonnull
 	protected BlockStateContainer createBlockState() {
 		IProperty[] listedProperties = new IProperty[]{BlockStairs.FACING, BlockStairs.HALF, BlockStairs.SHAPE, LIGHT};
-		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{STATEPROP};
+		IUnlistedProperty[] unlistedProperties = new IUnlistedProperty[]{EditableStateProperty.INSTANCE};
 		return new ExtendedBlockState(this, listedProperties, unlistedProperties);
 	}
 
@@ -79,38 +79,9 @@ public class BlockEditableStairs extends BlockTEStairsBase implements IEditableB
 		TileEntity t = world.getTileEntity(pos);
 		IBlockState actual = getActualState(state, world, pos);
 		if (t instanceof TileEditableBlock && actual instanceof IExtendedBlockState) {
-			return ((IExtendedBlockState) actual).withProperty(STATEPROP, ((TileEditableBlock) t).state);
+			return ((IExtendedBlockState) actual).withProperty(EditableStateProperty.INSTANCE, ((TileEditableBlock) t).state);
 		}
 		return state;
-	}
-
-	private static final UnlistedPropertyState STATEPROP = new UnlistedPropertyState();
-
-	public static class UnlistedPropertyState implements IUnlistedProperty<IBlockState> {
-
-		@Override
-		@Nonnull
-		public String getName() {
-			return "stateprop";
-		}
-
-		@Override
-		@Nonnull
-		public boolean isValid(IBlockState value) {
-			return true;
-		}
-
-		@Override
-		@Nonnull
-		public Class<IBlockState> getType() {
-			return IBlockState.class;
-		}
-
-		@Override
-		@Nonnull
-		public String valueToString(IBlockState value) {
-			return value.toString();
-		}
 	}
 
 	@Override
@@ -132,12 +103,6 @@ public class BlockEditableStairs extends BlockTEStairsBase implements IEditableB
 	@Override
 	protected Class<? extends BakedModelBlock> getModelClass() {
 		return BakedModelEditableStairs.class;
-	}
-
-	@Override
-	@Nonnull
-	public IUnlistedProperty<IBlockState> getStateProperty() {
-		return STATEPROP;
 	}
 
 }

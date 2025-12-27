@@ -1,5 +1,6 @@
 package epicsquid.blockcraftery.model;
 
+import epicsquid.blockcraftery.block.EditableStateProperty;
 import epicsquid.blockcraftery.block.IEditableBlock;
 import epicsquid.mysticallib.model.CustomModelBase;
 import epicsquid.mysticallib.model.DefaultTransformations;
@@ -39,9 +40,9 @@ public abstract class BakedModelEditable extends BakedModelBlock {
 
 	@Override
 	public List<BakedQuad> getQuads(IBlockState state, EnumFacing side, long rand) {
-		List<BakedQuad> finalquads = new ArrayList<BakedQuad>();
-		if (state instanceof IExtendedBlockState && state.getBlock() instanceof IEditableBlock) {
-			IBlockState texState = ((IExtendedBlockState) state).getValue(((IEditableBlock) state.getBlock()).getStateProperty());
+		List<BakedQuad> finalquads = new ArrayList<>();
+		if (state instanceof IExtendedBlockState extended && state.getBlock() instanceof IEditableBlock) {
+			IBlockState texState = extended.getValue(EditableStateProperty.INSTANCE);
 			String dataId = (texState == null ? "null" : texState.toString()) + "_" + state + "_" + (side == null ? "null" : side.toString()) + (
 				MinecraftForgeClient.getRenderLayer() == null ?
 					"null" :
@@ -55,7 +56,7 @@ public abstract class BakedModelEditable extends BakedModelBlock {
 					IBakedModel model = Minecraft.getMinecraft().getBlockRendererDispatcher().getModelForState(texState);
 					sprites[0] = model.getParticleTexture();
 					List<BakedQuad> texQuads = model.getQuads(texState, side, rand);
-					if (texQuads.size() > 0) {
+					if (!texQuads.isEmpty()) {
 						sprites = new TextureAtlasSprite[texQuads.size()];
 						tintIndices = new int[texQuads.size()];
 						for (int i = 0; i < texQuads.size(); i++) {
