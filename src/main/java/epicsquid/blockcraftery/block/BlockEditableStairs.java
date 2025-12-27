@@ -33,14 +33,6 @@ public class BlockEditableStairs extends BlockTEStairsBase implements IEditableB
 		setDefaultState(this.blockState.getBaseState().withProperty(LIGHT, false));
 	}
 
-	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (getParent() != null) {
-			return super.getLightOpacity(state, world, pos);
-		}
-		return super.getLightOpacity(state, world, pos);
-	}
-
 //  @Override
 //  @Nonnull
 //  public IBlockState getStateFromMeta(int meta) {

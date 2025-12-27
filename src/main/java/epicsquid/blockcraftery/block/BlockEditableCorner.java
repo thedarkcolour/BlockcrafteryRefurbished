@@ -34,14 +34,6 @@ public class BlockEditableCorner extends BlockTECornerBase implements IEditableB
 		setDefaultState(this.blockState.getBaseState().withProperty(LIGHT, false));
 	}
 
-	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (getParentState() != null) {
-			return super.getLightOpacity(state, world, pos);
-		}
-		return super.getLightOpacity(state, world, pos);
-	}
-
 //  @Override
 //  @Nonnull
 //  public IBlockState getStateFromMeta(int meta) {

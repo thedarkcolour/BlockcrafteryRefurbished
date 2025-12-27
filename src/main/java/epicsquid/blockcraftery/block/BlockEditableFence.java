@@ -32,14 +32,6 @@ public class BlockEditableFence extends BlockTEFenceBase implements IEditableBlo
 		setDefaultState(this.blockState.getBaseState().withProperty(LIGHT, false));
 	}
 
-	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (getParent().getDefaultState() != null) {
-			return super.getLightOpacity(getParent().getDefaultState(), world, pos);
-		}
-		return super.getLightOpacity(state, world, pos);
-	}
-
 //  @Override
 //  @Nonnull
 //  public IBlockState getStateFromMeta(int meta) {

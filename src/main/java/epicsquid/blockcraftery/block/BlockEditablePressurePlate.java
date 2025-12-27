@@ -34,14 +34,6 @@ public class BlockEditablePressurePlate extends BlockTEPressurePlateBase impleme
 	}
 
 	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (getParent() != null) {
-			return super.getLightOpacity(state, world, pos);
-		}
-		return super.getLightOpacity(state, world, pos);
-	}
-
-	@Override
 	@Nonnull
 	public IBlockState getStateFromMeta(int meta) {
 		return getDefaultState().withProperty(LIGHT, meta == 1).withProperty(POWERED, meta >> 1 == 1);

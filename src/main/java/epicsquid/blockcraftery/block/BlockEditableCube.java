@@ -34,7 +34,7 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 	public BlockEditableCube(@Nonnull Material mat, @Nonnull SoundType type, float hardness, @Nonnull String name, @Nonnull Class<? extends TileEntity> teClass) {
 		super(mat, type, hardness, name, teClass);
 		setModelCustom(true);
-		this.setLightOpacity(0);
+		setLightOpacity(0);
 		setOpacity(false);
 		setDefaultState(this.blockState.getBaseState().withProperty(FULLCUBE, true).withProperty(OPAQUECUBE, false).withProperty(LIGHT, false));
 	}
@@ -124,14 +124,6 @@ public class BlockEditableCube extends BlockTEBase implements IEditableBlock {
 			return ((IExtendedBlockState) actual).withProperty(EditableStateProperty.INSTANCE, placeState);
 		}
 		return state;
-	}
-
-	@Override
-	public int getLightOpacity(IBlockState state, IBlockAccess world, BlockPos pos) {
-		if (getParentState() != null) {
-			return super.getLightOpacity(getParentState(), world, pos);
-		}
-		return super.getLightOpacity(state, world, pos);
 	}
 
 	@Nonnull
